@@ -28,7 +28,7 @@ own configuration.
   outputs = { self, nixpkgs, flake-utils, ddnPkg }:
     flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" "aarch64-darwin" ] (system:
       let pkgs = nixpkgs.legacyPackages.${system};
-          ddn = ddnPkg.defaultPackage.${system};
+          ddn = ddnPkg.packages.${system}.default;
           lib =  nixpkgs.lib;
       in {
         devShell = pkgs.mkShell rec {
