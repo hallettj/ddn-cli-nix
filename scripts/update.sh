@@ -18,6 +18,7 @@ else
 fi
 
 REPO_URL="${REPO_URL:="git@github.com:hasura/v3-cli-go.git"}";
+PACKAGE_EXPRESSION="${PACKAGE_EXPRESSION:="packages/ddn.nix"}";
 
 function list-tags() {
   list-git-tags --url="$REPO_URL" \
@@ -38,7 +39,7 @@ function fetch-hash() {
 function main() {
   local version="${VERSION:=$(latest-tag)}"
 
-  sed -i "s|version\s*=[^;]*;|version = \"$version\";|" packages/ddn.nix
+  sed -i "s|version\s*=[^;]*;|version = \"$version\";|" "$PACKAGE_EXPRESSION"
 
   for system in "darwin-amd64" "darwin-arm64" "linux-amd64"; do
     local urlWithVersion="${BINARY_URL_PATTERN//VERSION/$version}"
@@ -46,7 +47,7 @@ function main() {
     local hash
     hash=$(fetch-hash "$url")
 
-    sed -i "s|\"$system\"\s*=[^;]*;|\"$system\" = \"$hash\";|" packages/ddn.nix
+    sed -i "s|\"$system\"\s*=[^;]*;|\"$system\" = \"$hash\";|" "$PACKAGE_EXPRESSION"
   done
 
   # Echo success message to stderr to provide feedback. Echo version to stdout
